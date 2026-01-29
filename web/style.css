@@ -1,0 +1,19 @@
+/* Использование цветов темы Telegram для нативности */
+body {
+    background-color: var(--tg-theme-bg-color, #f5f5f5);
+    color: var(--tg-theme-text-color, #222);
+}
+
+.card {
+    background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+}
+
+.task-completed {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+/* Кастомный чекбокс для красоты */
+input[type="checkbox"] {
+    accent-color: var(--tg-theme-button-color, #2481cc);
+}
