@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="api-base" content="https://tgbottaskenforcer-production.up.railway.app">
+    <title>Task Enforcer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="pb-20">
+    <div id="init-error" class="hidden fixed top-4 left-4 right-4 z-50 p-4 rounded-xl bg-amber-100 text-amber-900 border border-amber-300 text-xs"></div>
+
+    <main id="screen-today" class="p-4 space-y-6">
+        <h1 class="text-2xl font-bold">Сегодня</h1>
+        
+        <section>
+            <h2 class="section-title">Задачи</h2>
+            <div id="list-active-tasks" class="space-y-2"></div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Привычки</h2>
+            <div id="list-today-habits" class="space-y-2"></div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Выполнено</h2>
+            <div id="list-completed-tasks" class="space-y-2"></div>
+        </section>
+    </main>
+
+    <main id="screen-habits" class="hidden p-4 space-y-6">
+        <h1 class="text-2xl font-bold">Мои привычки</h1>
+        <div id="list-all-habits" class="space-y-2"></div>
+    </main>
+
+    <button onclick="openModal()" class="fab">+</button>
+
+    <div id="input-modal" class="modal-backdrop" onclick="if(event.target === this) closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <span id="modal-title" class="font-bold text-gray-700 text-lg">Новая задача</span>
+                <button onclick="closeModal()" class="text-gray-400 text-sm">Отмена</button>
+            </div>
+            <input type="text" id="main-input" placeholder="..." 
+                   class="w-full p-4 bg-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500 text-black text-base">
+            <button onclick="handleSave()" class="w-full mt-4 py-4 bg-orange-500 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition">
+                Сохранить
+            </button>
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <button onclick="switchTab('today')" id="btn-today" class="nav-btn active">
+            <span class="text-[10px] uppercase tracking-widest font-bold">Сегодня</span>
+        </button>
+        <button onclick="switchTab('habits')" id="btn-habits" class="nav-btn">
+            <span class="text-[10px] uppercase tracking-widest font-bold">Привычка</span>
+        </button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
