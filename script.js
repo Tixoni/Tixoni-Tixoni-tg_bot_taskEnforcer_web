@@ -68,41 +68,33 @@ function renderLists(tasks, habits) {
 }
 
 function createItemHTML(item, type) {
+
     const isDone = type === 'task' ? item.is_completed : (item.is_completed_today || item.is_complete_today);
+
     const checkCls = type === 'task' ? 'checkbox-task' : 'checkbox-habit';
-    
-    const card = document.createElement('div');
-    card.className = 'card';
 
-    const startHandler = (e) => handlePressStart(e, item.id, type, item.title);
-    
-    card.addEventListener('touchstart', startHandler);
-    card.addEventListener('mousedown', startHandler);
-    card.addEventListener('touchend', handlePressEnd);
-    card.addEventListener('mouseup', handlePressEnd);
+    const clickFn = type === 'task' ? `toggleTask(${item.id})` : `toggleHabit(${item.id})`;
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = checkCls;
-    checkbox.checked = !!isDone;
-    
-    checkbox.addEventListener('click', (e) => {
-        e.stopPropagation();
-        type === 'task' ? toggleTask(item.id) : toggleHabit(item.id);
-    });
 
-    const span = document.createElement('span');
-    span.textContent = item.title; 
-    
-    const statusClasses = isDone 
-        ? 'line-through opacity-40 text-gray-500' 
-        : 'font-semibold text-gray-100';
-    span.className = `flex-1 ${statusClasses}`;
 
-    card.appendChild(checkbox);
-    card.appendChild(span);
+    return `
 
-    return card;
+        <div class="card" 
+
+             ontouchstart="handlePressStart(event, ${item.id}, '${type}', '${item.title.replace(/'/g, "\\'")}')" 
+
+             ontouchend="handlePressEnd()" 
+
+             onmousedown="handlePressStart(event, ${item.id}, '${type}', '${item.title.replace(/'/g, "\\'")}')" 
+
+             onmouseup="handlePressEnd()">
+
+            <input type="checkbox" class="${checkCls}" ${isDone ? 'checked' : ''} onclick="${clickFn}; event.stopPropagation();">
+
+            <span class="flex-1 ${isDone ? 'line-through opacity-40 text-gray-500' : 'font-semibold text-gray-100'}">${item.title}</span>
+
+        </div>`;
+
 }
 
 // LONG PRESS LOGIC
@@ -328,4 +320,5 @@ function setCalendarToToday() {
         renderWeekView();
     }
 }
+
 
