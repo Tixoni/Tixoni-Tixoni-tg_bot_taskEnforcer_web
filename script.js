@@ -67,7 +67,7 @@ function renderLists(tasks, habits) {
     if (hFull) hFull.innerHTML = habits.map(h => createItemHTML(h, 'habit')).join('');
 }
 
-function createItemElement(item, type) {
+function createItemHTML(item, type) {
     const isDone = type === 'task' ? item.is_completed : (item.is_completed_today || item.is_complete_today);
     const checkCls = type === 'task' ? 'checkbox-task' : 'checkbox-habit';
     
@@ -328,3 +328,4 @@ function setCalendarToToday() {
         renderWeekView();
     }
 }
+
