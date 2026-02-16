@@ -72,15 +72,37 @@ function createItemHTML(item, type) {
     const checkCls = type === 'task' ? 'checkbox-task' : 'checkbox-habit';
     const clickFn = type === 'task' ? `toggleTask(${item.id})` : `toggleHabit(${item.id})`;
 
-    return `
-        <div class="card" 
-             ontouchstart="handlePressStart(event, ${item.id}, '${type}', '${item.title.replace(/'/g, "\\'")}')" 
-             ontouchend="handlePressEnd()" 
-             onmousedown="handlePressStart(event, ${item.id}, '${type}', '${item.title.replace(/'/g, "\\'")}')" 
-             onmouseup="handlePressEnd()">
-            <input type="checkbox" class="${checkCls}" ${isDone ? 'checked' : ''} onclick="${clickFn}; event.stopPropagation();">
-            <span class="flex-1 ${isDone ? 'line-through opacity-40 text-gray-500' : 'font-semibold text-gray-100'}">${item.title}</span>
-        </div>`;
+    // 1. Создаем родительский контейнер программно
+    const taskCard = document.createElement('div');
+    taskCard.classList.add('card');
+    
+    // Навешиваем события (в строках это делать неудобно и опасно, но если очень хочется...)
+    taskCard.setAttribute('onmousedown', `handlePressStart(event, ${item.id}, '${type}', '${item.title.replace(/'/g, "\\'")}')`);
+    taskCard.setAttribute('onmouseup', `handlePressEnd()`);
+
+    // 2. Вставляем внутренности чекбокса через innerHTML
+    taskCard.innerHTML = `
+        <input type="checkbox" class="${checkCls}" ${isDone ? 'checked' : ''} 
+               onclick="${clickFn}; event.stopPropagation();">
+    `;
+
+    // 3. А теперь создаем span через createElement (это безопасно для текста)
+    const spanTitle = document.createElement('span');
+    spanTitle.classList.add('flex-1');
+    
+    // Правильная логика добавления классов
+    if (isDone) {
+        spanTitle.classList.add('line-through', 'opacity-40', 'text-gray-500');
+    } else {
+        spanTitle.classList.add('font-semibold', 'text-gray-100');
+    }
+    
+    spanTitle.textContent = item.title;
+
+    // 4. Вот теперь .append() сработает, потому что taskCard — это Element
+    taskCard.append(spanTitle);
+
+    return taskCard;
 }
 
 // LONG PRESS LOGIC
@@ -305,4 +327,5 @@ function setCalendarToToday() {
     if (!document.getElementById('calendar-week-view').classList.contains('hidden')) {
         renderWeekView();
     }
+
 }
